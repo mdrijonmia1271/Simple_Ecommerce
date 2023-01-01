@@ -110,8 +110,6 @@ if(!empty($category_name)){
           <div class="col-md-12  " >
             <div style="overflow-x:auto;" data-aos="fade-up" class="shadow bg-white  py-5 px-4">
 
-           
-
            <form action="addCategory.php" method="post" enctype="multipart/form-data">
               <h5>Products Category</h5>
               <table style="width:100%" class="current-data-table" > 
