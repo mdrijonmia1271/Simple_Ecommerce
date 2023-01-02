@@ -1,3 +1,16 @@
+
+
+<?php
+
+$pdo = new PDO('mysql:host=localhost;port=3306;dbname=simple_ecommerce','root','');
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+$statement = $pdo->prepare('SELECT * FROM packets ORDER BY id DESC');
+$statement->execute();
+$products = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -43,8 +56,8 @@
                 <ul class="collapse show" id="services">
                   <li><a href="ProductSubCategory.php">Product Sub Category</a></li>
                   <li><a href="productColor.php">Product Colors</a></li>
-                  <li><a href="productSize.html">Product Sizes</a></li>
-                  <li><a href="productPacket.html">Product Packet</a></li>
+                  <li><a href="productSize.php">Product Sizes</a></li>
+                  <li><a href="productPacket.php">Product Packet</a></li>
                 </ul>
               </li>
               
@@ -74,7 +87,7 @@
       <div class="main-content-inner pt-4">
         <div class="row pb-3 pt-3">
           <div class="col-md-3 col-sm-3">
-            <h4 style="margin-bottom: 0;">Products Size</h4>
+            <h4 style="margin-bottom: 0;">Products Packet</h4>
           </div>
           <div class="col-md-10 col-sm-10"> </div>
         </div>
@@ -87,38 +100,35 @@
                   <div class="row pt-4 pb-4 px-2">
                     <div class="col-md-12">
                       <div class="product-add-btn">
-                        <a  href="addSize.html" class="add-user">Add Product Size</a>
+                        <a  href="addPacket.php" class="add-user">Add Product Packet</a>
                        </div>
 
                        <table class="table" id="example">
                         <thead>
                         <tr>
                             <th scope="col">ID</th>
-                            <th scope="col">Size Name</th>
+                            <th scope="col">Packet Name</th>
                             <th scope="col">Create Date</th>
                             <th scope="col">Action</th>
                         </tr>
                         </thead>
-                        <!-- <tbody> -->
-                        <!-- <?php
+                        <tbody>
+                        <?php
                         foreach ($products as $i => $product): ?>
                             <tr>
                                 <th scope="row"><?php echo $i+1 ?></th>
-                                <td>
-                                    <img src="<?php echo $product['image'] ?>" class="thumb-image">
-                                </td>
-                                <td id="example"><?php echo $product ['title'] ?></td>
+                                <td id="example"><?php echo $product ['packet_name'] ?></td>
                                 <td><?php echo $product ['create_date'] ?></td>
                                 <td>
-                                    <a href="update.php?id=<?php echo $product['id'] ?>" type="button" class="btn btn-sm btn-outline-primary">Edit</a>
-                                   <form style="display: inline-block" method="post" action="delete.php" >
+                                    <a href="updatePacket.php?id=<?php echo $product['id'] ?>" type="button" class="btn btn-sm btn-outline-primary">Edit</a>
+                                   <form style="display: inline-block" method="post" action="deletePacket.php" >
                                        <input type="hidden" name="id" value="<?php echo $product['id'] ?>">
                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                                    </form>
                                 </td>
                             </tr>
-                        <?php endforeach; ?> -->
-                        <!-- </tbody> -->
+                        <?php endforeach; ?>
+                        </tbody>
                     </table>
                     
                     </div>

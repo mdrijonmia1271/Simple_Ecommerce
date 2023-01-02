@@ -25,7 +25,9 @@ $products = $statements->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $emptSubCategoryName = '';
 $empt_category_name = '';
+$inValid_select = 'Not Valid Option';
 $sub_category_name = $product['sub_category_name'];
+$product_cate_name_id = $product['category_name_id'];
 if(isset($_POST['submit'])){
   $sub_category_name = $_POST['sub_category_name'];
   $category_name_id = $_POST['category_name_id'];
@@ -42,11 +44,12 @@ if(isset($_POST['submit'])){
   }
 
   if(!empty($sub_category_name) && (!empty($category_name_id))){
-    $statement = $pdo ->prepare('UPDATE sub_category SET sub_category_name = :sub_category_name, category_name_id = :category_name_id, description = :description, status = :status');
+    $statement = $pdo ->prepare('UPDATE sub_category SET sub_category_name = :sub_category_name, category_name_id = :category_name_id, description = :description, status = :status WHERE id = :id');
     $statement->bindVAlue(':sub_category_name', $sub_category_name);
     $statement->bindVAlue(':category_name_id', $category_name_id);
     $statement->bindVAlue(':description', $description);
     $statement->bindVAlue(':status', $status);
+    $statement->bindVAlue(':id', $id);
     $statement->execute();
     header('location: ProductSubCategory.php');
     
@@ -105,8 +108,8 @@ if(isset($_POST['submit'])){
                 <ul class="collapse show" id="services">
                   <li><a href="ProductSubCategory.php">Product Sub Category</a></li>
                   <li><a href="productColor.php">Product Colors</a></li>
-                  <li><a href="productSize.html">Product Sizes</a></li>
-                  <li><a href="productPacket.html">Product Packet</a></li>
+                  <li><a href="productSize.php">Product Sizes</a></li>
+                  <li><a href="productPacket.php">Product Packet</a></li>
                 </ul>
               </li>
          
@@ -144,10 +147,8 @@ if(isset($_POST['submit'])){
                 <tr>
                   <th>Sub Category Name:</th>
                   <td>
-                    <?php echo "Old Name ".'<b>'.$product['sub_category_name'].'</b>' ?>
-                    <br>
                     
-                    <input type="text" name="sub_category_name" placeholder="Name">
+                    <input type="text" name="sub_category_name" placeholder="Name" value="<?php echo $product['sub_category_name'] ?>">
                     <br>
                     <?php if(isset($_POST['submit'])){echo "<span class='text-danger'>".$emptSubCategoryName."</span>";} ?>
                   </td>
@@ -156,23 +157,30 @@ if(isset($_POST['submit'])){
                   <th>Category Name:</th>
                   <td>
                     <select name="category_name_id">
-                      <option value=""  selected="selected">Choose one</option>
+                    <option value=''> -- Select Category -- </option>
                       <?php
-                      
-                      // Iterating through the product array
-                      foreach($products as $key => $item){
-                          echo "<option value='$key'>$item</option>";
-                      }
-                      ?>
+                                  $product_cate_name_id = $product ['category_name_id'];
+                                  $con = mysqli_connect('localhost','root','','simple_ecommerce');
+                                  $result = mysqli_query($con, "SELECT id FROM category WHERE id = '$product_cate_name_id'");
+                                  $row = mysqli_fetch_array($result);
+                                  foreach($products as $key => $item){
+                                    if($key == $row['id']){
+                                      echo "<option value='$key' selected='selected'>$item</option>";
+                                    }
+                                    if($key != $row['id']){
+                                      echo "<option value='$key'>$item</option>";
+                                    }
+                                }
+                        ?>
                   </select>
                   <br>
-                  <?php if(isset($_POST['submit'])){echo "<span class='text-danger'>".$empt_category_name."</span>";} ?>
+                  <?php if(isset($_POST['submit'])){echo "<span class='text-danger'>".$inValid_select."</span>";} ?>
                   </td>
                 </tr>
                 <tr>
                   <th>Sub Category Description:</th>
                   <td>
-                    <textarea cols="50" name="description" placeholder="Description"></textarea>
+                    <textarea cols="50" name="description" placeholder="Description"><?php echo $product['description'] ?></textarea>
                   </td>
                 </tr>
                 <tr>

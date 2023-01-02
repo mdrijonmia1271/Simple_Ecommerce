@@ -1,10 +1,7 @@
 
 <?php
 
-
 $connect = new mysqli('localhost','root','','simple_ecommerce');
-
-
 
 $empt_name = '';
 if(isset($_POST['submit'])){
@@ -24,8 +21,6 @@ if(!empty($category_name)){
 }
 
 }
-
-
 
 
 ?>
@@ -77,13 +72,10 @@ if(!empty($category_name)){
                 <ul class="collapse show" id="services">
                   <li><a href="ProductSubCategory.php">Product Sub Category</a></li>
                   <li><a href="productColor.php">Product Colors</a></li>
-                  <li><a href="productSize.html">Product Sizes</a></li>
-                  <li><a href="productPacket.html">Product Packet</a></li>
+                  <li><a href="productSize.php">Product Sizes</a></li>
+                  <li><a href="productPacket.php">Product Packet</a></li>
                 </ul>
               </li>
-              
-
-            
             </ul>
           </nav>
         </div>
@@ -127,7 +119,7 @@ if(!empty($category_name)){
                   <th>Category Description:</th>
                   <td>
                       <br>
-                    <textarea cols="50" name="category_description" >Category Description</textarea>
+                    <textarea cols="50" name="category_description" placeholder="Category Description"></textarea>
                   </td>
                 </tr>
                 <tr>
@@ -149,7 +141,6 @@ if(!empty($category_name)){
           </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>

@@ -1,3 +1,36 @@
+
+<?php
+
+
+$connect = new mysqli('localhost','root','','simple_ecommerce');
+
+
+
+$empt_size_name = '';
+if(isset($_POST['submit'])){
+  $size_name = $_POST['size_name'];
+  $size_description = $_POST['size_description'];
+  $status = isset($_POST['status']) && $_POST['status']  ? "1" : "0";
+  $date = date('Y-m-d H:i:s');
+    // var_dump($status);
+if(empty($size_name)){
+  $empt_size_name = 'Fill up this field';
+
+}
+if(!empty($size_name)){
+  $connect->query("INSERT INTO sizes (size_name, size_description, create_date, status) VAlUE('$size_name', '$size_description', '$date', '$status')");
+
+  header('location: productSize.php');
+}
+
+}
+
+
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,10 +74,10 @@
                 </a>
 
                 <ul class="collapse show" id="services">
-                  <li><a href="ProductSubCategory.html">Product Sub Category</a></li>
+                  <li><a href="ProductSubCategory.php">Product Sub Category</a></li>
                   <li><a href="productColor.php">Product Colors</a></li>
-                  <li><a href="productSize.html">Product Sizes</a></li>
-                  <li><a href="productPacket.html">Product Packet</a></li>
+                  <li><a href="productSize.php">Product Sizes</a></li>
+                  <li><a href="productPacket.php">Product Packet</a></li>
                 </ul>
               </li>
               
@@ -77,40 +110,34 @@
             <div style="overflow-x:auto;" data-aos="fade-up" class="shadow bg-white  py-5 px-4">
 
            
-            <h5>Products Packet</h5>
-            <table style="width:100%" class="current-data-table" > 
-              <tr>
-                <th>Packet Name:</th>
-                <td><input type="text" placeholder="Category Name"></td>
-              </tr>
-              <tr>
-                <th>Packet Description:</th>
-                <td>
-                  <textarea cols="50">Packet Description</textarea>
-                </td>
-              </tr>
-              <tr>
-                <th>Status:</th>
-                <td><label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                  </label></td>
-              </tr>
-              <tr>
-             
-           
+            <form action="addSize.php" method="post" enctype="multipart/form-data">
+                <h5>Products Size</h5>
+                <table style="width:100%" class="current-data-table" > 
+                  <tr>
+                    <th>Size Name:</th>
+                    <td><input type="text" name="size_name" placeholder="Name">
+                      <br>
+                      <?php if(isset($_POST['submit'])){echo "<span class ='text-danger'>".$empt_size_name."</span>";} ?>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Size Description:</th>
+                    <td>
+                      <textarea cols="50" name="size_description" placeholder="Description"></textarea>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Status:</th>
+                    <td><label class="switch">
+                        <input type="checkbox" name="status">
+                        <span class="slider round"></span>
+                      </label></td>
+                  </tr>
+                  <tr>
+                </table>
+                <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+            </form>
             
-             
-              
-             
-             
-                
-             
-              
-            </table>
-            <div class="col-6 categorySubmit">
-              <input  type="submit" value="Submit">
-            </div>
           </div>
           </div>
         </div>

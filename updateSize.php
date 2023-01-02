@@ -1,49 +1,50 @@
+
 <?php
 
 
 $pdo = new PDO('mysql:host=localhost;port=3306;dbname=simple_ecommerce','root','');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$statement = $pdo->prepare('SELECT id, category_name FROM category');
+$id = $_GET['id'] ?? null;
+if (!$id){
+    header('Location: productSize.php');
+    exit();
+}
+$statement = $pdo->prepare('SELECT * FROM sizes WHERE id = :id');
+$statement->bindValue(':id', $id);
 $statement->execute();
-$products = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
-// echo "<pre>";
-//  var_dump($products);
-// echo "</pre>";
+$product = $statement->fetch(PDO::FETCH_ASSOC);
 
-$emptSubCategoryName = '';
-$empt_category_name = '';
+
+
+$emp_size_name = '';
+$size_name = $product['size_name'];
+$size_description = $product['size_description'];
 if(isset($_POST['submit'])){
-  $sub_category_name = $_POST['sub_category_name'];
-  $category_name_id = $_POST['category_name_id'];
-  $description = $_POST['description'];
+  $size_name = $_POST['size_name'];
+  $size_description = $_POST['size_description'];
   $status = isset($_POST['status']) && $_POST['status']  ? "1" : "0";
   $date = date('Y-m-d H:i:s');
-
-  if(empty($sub_category_name)){
-    $emptSubCategoryName = 'Fill Up this field';
-  }
-  // echo $category_name_id;
-  if(empty($category_name_id)){
-    $empt_category_name = 'Fill Up this field';
-  }
-
-  if(!empty($sub_category_name) && (!empty($category_name_id))){
-    $statement = $pdo ->prepare('INSERT INTO sub_category (sub_category_name, category_name_id, description, create_date, status )
-                 VALUE(:sub_category_name, :category_name_id, :description, :date, :status )');
-    $statement->bindVAlue(':sub_category_name', $sub_category_name);
-    $statement->bindVAlue(':category_name_id', $category_name_id);
-    $statement->bindVAlue(':description', $description);
-    $statement->bindVAlue(':date', $date);
-    $statement->bindVAlue(':status', $status);
-    $statement->execute();
-    header('location: ProductSubCategory.php');
-    
-
-  }
-
+    // var_dump($status);
+if(empty($size_name)){
+  $emp_size_name = 'Fill up this field';
 
 }
+if(!empty($size_name)){
+    $statement = $pdo->prepare("UPDATE sizes  SET size_name = :size_name, size_description = :size_description, status = :status
+    WHERE id = :id");
+        $statement->bindVAlue(':size_name', $size_name);
+        $statement->bindVAlue(':size_description', $size_description);
+        $statement->bindVAlue(':status', $status);
+        $statement->bindValue(':id', $id);
+        $statement->execute();
+  header('location: productSize.php');
+}
+
+}
+
+
+
 
 ?>
 
@@ -98,8 +99,9 @@ if(isset($_POST['submit'])){
                   <li><a href="productPacket.php">Product Packet</a></li>
                 </ul>
               </li>
-         
+              
 
+            
             </ul>
           </nav>
         </div>
@@ -127,37 +129,26 @@ if(isset($_POST['submit'])){
             <div style="overflow-x:auto;" data-aos="fade-up" class="shadow bg-white  py-5 px-4">
 
            
-           <form action="addSubCategory.php" method="POST" enctype="multipart/form-data">
-            <h5>Products Sub Category</h5>
+
+           <form action="" method="post" enctype="multipart/form-data">
+              <h5> Update Products Size</h5>
               <table style="width:100%" class="current-data-table" > 
                 <tr>
-                  <th>Sub Category Name:</th>
+                  <th>Size Name:</th>
                   <td>
-                    <input type="text" name="sub_category_name" placeholder="Name">
-                    <br>
-                    <?php if(isset($_POST['submit'])){echo "<span class='text-danger'>".$emptSubCategoryName."</span>";} ?>
-                  </td>
-                </tr>
-                  <tr>
-                  <th>Category Name:</th>
-                  <td>
-                    <select name="category_name_id">
-                      <option value=""  selected="selected">Choose one</option>
-                      <?php
-                      // Iterating through the product array
-                      foreach($products as $key => $item){
-                          echo "<option value='$key'>$item</option>";
-                      }
-                      ?>
-                  </select>
+                    
+                    <!-- <br> -->
+                  <input type="text" name="size_name"  placeholder="Name" value="<?php echo $product['size_name'] ?>">
                   <br>
-                  <?php if(isset($_POST['submit'])){echo "<span class='text-danger'>".$empt_category_name."</span>";} ?>
-                  </td>
+                  <?php if(isset($_POST['submit'])){echo "<span class ='text-danger'>".$emp_size_name."</span>";} ?>
+                </td>
                 </tr>
+                <br>
                 <tr>
-                  <th>Sub Category Description:</th>
+                  <th>Size Description:</th>
                   <td>
-                    <textarea cols="50" name="description" placeholder="Description"></textarea>
+                      <br>
+                    <textarea cols="50" name="size_description" placeholder="Description"><?php echo $product['size_description'] ?></textarea>
                   </td>
                 </tr>
                 <tr>
@@ -166,16 +157,16 @@ if(isset($_POST['submit'])){
                       <input type="checkbox" name="status">
                       <span class="slider round"></span>
                     </label></td>
-                </tr>
-              
+                    <!-- <input type="checkbox" name="status" value="status" > -->
+                </tr> 
               </table>
-              <!-- <div class="col-6 categorySubmit"> -->
+              <!-- <div class="col-6 categorySubmit "> -->
               <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+                
               <!-- </div> -->
 
            </form>
-
-
+            
           </div>
           </div>
         </div>

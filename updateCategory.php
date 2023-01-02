@@ -95,8 +95,8 @@ if(!empty($category_name)){
                 <ul class="collapse show" id="services">
                   <li><a href="ProductSubCategory.php">Product Sub Category</a></li>
                   <li><a href="productColor.php">Product Colors</a></li>
-                  <li><a href="productSize.html">Product Sizes</a></li>
-                  <li><a href="productPacket.html">Product Packet</a></li>
+                  <li><a href="productSize.php">Product Sizes</a></li>
+                  <li><a href="productPacket.php">Product Packet</a></li>
                 </ul>
               </li>
               
@@ -136,9 +136,8 @@ if(!empty($category_name)){
                 <tr>
                   <th>Category Name:</th>
                   <td>
-                    <?php echo "Old Name ".'<b>'.$product['category_name'].'</b>' ?>
-                    <br>
-                  <input type="text" name="category_name"  placeholder="Name">
+                    
+                  <input type="text" name="category_name"  placeholder="Name" value="<?php echo $product['category_name'] ?>">
                   <br>
                   <?php if(isset($_POST['submit'])){echo "<span class ='text-danger'>".$emp_name."</span>";} ?>
                 </td>
@@ -148,7 +147,7 @@ if(!empty($category_name)){
                   <th>Category Description:</th>
                   <td>
                       <br>
-                    <textarea cols="50" name="category_description" placeholder="Description"></textarea>
+                    <textarea cols="50" name="category_description" placeholder="Description"><?php echo $product['category_description'] ?></textarea>
                   </td>
                 </tr>
                 <tr>

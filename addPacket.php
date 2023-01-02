@@ -1,3 +1,32 @@
+
+
+<?php
+
+$connect = new mysqli('localhost','root','','simple_ecommerce');
+
+$empt_packet_name = '';
+if(isset($_POST['submit'])){
+  $packet_name = $_POST['packet_name'];
+  $packet_description = $_POST['packet_description'];
+  $status = isset($_POST['status']) && $_POST['status']  ? "1" : "0";
+  $date = date('Y-m-d H:i:s');
+    // var_dump($status);
+if(empty($packet_name)){
+  $empt_packet_name = 'Fill up this field';
+
+}
+if(!empty($packet_name)){
+  $connect->query("INSERT INTO packets (packet_name, packet_description, create_date, status) VAlUE('$packet_name', '$packet_description', '$date', '$status')");
+
+  header('location: productPacket.php');
+}
+
+}
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,20 +65,16 @@
             <ul class="metismenu" id="menu">
               <li class="management">Management</li>
               <li>
-                <a href="productCategory.html" data-bs-toggle="collapse show" data-bs-target="#productCategory" aria-controls="productCategory" aria-expanded="true"><i
+                <a href="productCategory.php" data-bs-toggle="collapse show" data-bs-target="#productCategory" aria-controls="productCategory" aria-expanded="true"><i
                     class="bi bi-graph-up"></i><span>Products Category </span>
                 </a>
-
                 <ul class="collapse show" id="services">
-                  <li><a href="ProductSubCategory.html">Product Sub Category</a></li>
+                  <li><a href="ProductSubCategory.php">Product Sub Category</a></li>
                   <li><a href="productColor.php">Product Colors</a></li>
-                  <li><a href="productSize.html">Product Sizes</a></li>
-                  <li><a href="productPacket.html">Product Packet</a></li>
+                  <li><a href="productSize.php">Product Sizes</a></li>
+                  <li><a href="productPacket.php">Product Packet</a></li>
                 </ul>
               </li>
-              
-
-            
             </ul>
           </nav>
         </div>
@@ -75,42 +100,36 @@
         <div class="row" >
           <div class="col-md-12  " >
             <div style="overflow-x:auto;" data-aos="fade-up" class="shadow bg-white  py-5 px-4">
-
-           
-            <h5>Products Size</h5>
-            <table style="width:100%" class="current-data-table" > 
-              <tr>
-                <th>Size Name:</th>
-                <td><input type="text" placeholder="Category Name"></td>
-              </tr>
-              <tr>
-                <th>Size Description:</th>
-                <td>
-                  <textarea cols="50">Size Description</textarea>
-                </td>
-              </tr>
-              <tr>
-                <th>Status:</th>
-                <td><label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                  </label></td>
-              </tr>
-              <tr>
-             
+             <form action="addPacket.php" method="POST" enctype="multipart/form-data">
+                <h5>Products Packet</h5>
+                <table style="width:100%" class="current-data-table" > 
+                  <tr>
+                    <th>Packet Name:</th>
+                    <td><input type="text" name="packet_name" placeholder="Packet Name">
+                    <br>
+                    <?php if(isset($_POST['submit'])){echo "<span class ='text-danger'>".$empt_packet_name."</span>";} ?>
+                  
+                  </td>
+                  </tr>
+                  <tr>
+                    <th>Packet Description:</th>
+                    <td>
+                      <textarea cols="50" name="packet_description" placeholder="Packet Description"></textarea>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Status:</th>
+                    <td><label class="switch">
+                        <input type="checkbox" name="status">
+                        <span class="slider round"></span>
+                      </label></td>
+                  </tr>
+                  <tr>
+                </table>
+                <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+             </form>
            
             
-             
-              
-             
-             
-                
-             
-              
-            </table>
-            <div class="col-6 categorySubmit">
-              <input  type="submit" value="Submit">
-            </div>
           </div>
           </div>
         </div>

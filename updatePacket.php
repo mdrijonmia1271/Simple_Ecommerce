@@ -1,49 +1,50 @@
+
 <?php
 
 
 $pdo = new PDO('mysql:host=localhost;port=3306;dbname=simple_ecommerce','root','');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$statement = $pdo->prepare('SELECT id, category_name FROM category');
+$id = $_GET['id'] ?? null;
+if (!$id){
+    header('Location: productPacket.php');
+    exit();
+}
+$statement = $pdo->prepare('SELECT * FROM packets WHERE id = :id');
+$statement->bindValue(':id', $id);
 $statement->execute();
-$products = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
-// echo "<pre>";
-//  var_dump($products);
-// echo "</pre>";
+$product = $statement->fetch(PDO::FETCH_ASSOC);
 
-$emptSubCategoryName = '';
-$empt_category_name = '';
+
+
+$empt_packet_name = '';
+$packet_name = $product['packet_name'];
+$packet_description = $product['packet_description'];
 if(isset($_POST['submit'])){
-  $sub_category_name = $_POST['sub_category_name'];
-  $category_name_id = $_POST['category_name_id'];
-  $description = $_POST['description'];
+  $packet_name = $_POST['packet_name'];
+  $packet_description = $_POST['packet_description'];
   $status = isset($_POST['status']) && $_POST['status']  ? "1" : "0";
   $date = date('Y-m-d H:i:s');
-
-  if(empty($sub_category_name)){
-    $emptSubCategoryName = 'Fill Up this field';
-  }
-  // echo $category_name_id;
-  if(empty($category_name_id)){
-    $empt_category_name = 'Fill Up this field';
-  }
-
-  if(!empty($sub_category_name) && (!empty($category_name_id))){
-    $statement = $pdo ->prepare('INSERT INTO sub_category (sub_category_name, category_name_id, description, create_date, status )
-                 VALUE(:sub_category_name, :category_name_id, :description, :date, :status )');
-    $statement->bindVAlue(':sub_category_name', $sub_category_name);
-    $statement->bindVAlue(':category_name_id', $category_name_id);
-    $statement->bindVAlue(':description', $description);
-    $statement->bindVAlue(':date', $date);
-    $statement->bindVAlue(':status', $status);
-    $statement->execute();
-    header('location: ProductSubCategory.php');
-    
-
-  }
-
+    // var_dump($status);
+if(empty($packet_name)){
+  $empt_packet_name = 'Fill up this field';
 
 }
+if(!empty($packet_name)){
+    $statement = $pdo->prepare("UPDATE packets  SET packet_name = :packet_name, packet_description = :packet_description, status = :status
+    WHERE id = :id");
+        $statement->bindVAlue(':packet_name', $packet_name);
+        $statement->bindVAlue(':packet_description', $packet_description);
+        $statement->bindVAlue(':status', $status);
+        $statement->bindValue(':id', $id);
+        $statement->execute();
+  header('location: productPacket.php');
+}
+
+}
+
+
+
 
 ?>
 
@@ -90,7 +91,6 @@ if(isset($_POST['submit'])){
                 <a href="productCategory.php" data-bs-toggle="collapse show" data-bs-target="#productCategory" aria-controls="productCategory" aria-expanded="true"><i
                     class="bi bi-graph-up"></i><span>Products Category </span>
                 </a>
-
                 <ul class="collapse show" id="services">
                   <li><a href="ProductSubCategory.php">Product Sub Category</a></li>
                   <li><a href="productColor.php">Product Colors</a></li>
@@ -98,8 +98,6 @@ if(isset($_POST['submit'])){
                   <li><a href="productPacket.php">Product Packet</a></li>
                 </ul>
               </li>
-         
-
             </ul>
           </nav>
         </div>
@@ -127,37 +125,25 @@ if(isset($_POST['submit'])){
             <div style="overflow-x:auto;" data-aos="fade-up" class="shadow bg-white  py-5 px-4">
 
            
-           <form action="addSubCategory.php" method="POST" enctype="multipart/form-data">
-            <h5>Products Sub Category</h5>
+
+           <form action="" method="post" enctype="multipart/form-data">
+              <h5> Update Products Packet</h5>
               <table style="width:100%" class="current-data-table" > 
                 <tr>
-                  <th>Sub Category Name:</th>
+                  <th>Packet Name:</th>
                   <td>
-                    <input type="text" name="sub_category_name" placeholder="Name">
-                    <br>
-                    <?php if(isset($_POST['submit'])){echo "<span class='text-danger'>".$emptSubCategoryName."</span>";} ?>
-                  </td>
-                </tr>
-                  <tr>
-                  <th>Category Name:</th>
-                  <td>
-                    <select name="category_name_id">
-                      <option value=""  selected="selected">Choose one</option>
-                      <?php
-                      // Iterating through the product array
-                      foreach($products as $key => $item){
-                          echo "<option value='$key'>$item</option>";
-                      }
-                      ?>
-                  </select>
+                    <!-- <br> -->
+                  <input type="text" name="packet_name"  placeholder="Name" value="<?php echo $product['packet_name'] ?>">
                   <br>
-                  <?php if(isset($_POST['submit'])){echo "<span class='text-danger'>".$empt_category_name."</span>";} ?>
-                  </td>
+                  <?php if(isset($_POST['submit'])){echo "<span class ='text-danger'>".$empt_packet_name."</span>";} ?>
+                </td>
                 </tr>
+                <br>
                 <tr>
-                  <th>Sub Category Description:</th>
+                  <th>Size Description:</th>
                   <td>
-                    <textarea cols="50" name="description" placeholder="Description"></textarea>
+                      <br>
+                    <textarea cols="50" name="packet_description" placeholder="Description"><?php echo $product['packet_description'] ?></textarea>
                   </td>
                 </tr>
                 <tr>
@@ -166,16 +152,16 @@ if(isset($_POST['submit'])){
                       <input type="checkbox" name="status">
                       <span class="slider round"></span>
                     </label></td>
-                </tr>
-              
+                    <!-- <input type="checkbox" name="status" value="status" > -->
+                </tr> 
               </table>
-              <!-- <div class="col-6 categorySubmit"> -->
+              <!-- <div class="col-6 categorySubmit "> -->
               <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+                
               <!-- </div> -->
 
            </form>
-
-
+            
           </div>
           </div>
         </div>
