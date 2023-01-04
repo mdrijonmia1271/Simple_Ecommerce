@@ -91,7 +91,6 @@ if(!empty($category_name)){
                 <a href="productCategory.php" data-bs-toggle="collapse show" data-bs-target="#productCategory" aria-controls="productCategory" aria-expanded="true"><i
                     class="bi bi-graph-up"></i><span>Products Category </span>
                 </a>
-
                 <ul class="collapse show" id="services">
                   <li><a href="ProductSubCategory.php">Product Sub Category</a></li>
                   <li><a href="productColor.php">Product Colors</a></li>
@@ -99,9 +98,14 @@ if(!empty($category_name)){
                   <li><a href="productPacket.php">Product Packet</a></li>
                 </ul>
               </li>
-              
-
-            
+              <li><a href="user.php" data-bs-toggle="collapse show"aria-expanded="true"><i
+                    class="bi bi-graph-up"></i><span>Registration </span>
+                </a>
+              </li>
+              <li><a href="login.php" data-bs-toggle="collapse show"aria-expanded="true"><i
+                    class="bi bi-graph-up"></i><span>Log Out </span>
+                </a>
+              </li> 
             </ul>
           </nav>
         </div>

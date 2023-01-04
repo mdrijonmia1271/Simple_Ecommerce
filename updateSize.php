@@ -91,7 +91,6 @@ if(!empty($size_name)){
                 <a href="productCategory.php" data-bs-toggle="collapse show" data-bs-target="#productCategory" aria-controls="productCategory" aria-expanded="true"><i
                     class="bi bi-graph-up"></i><span>Products Category </span>
                 </a>
-
                 <ul class="collapse show" id="services">
                   <li><a href="ProductSubCategory.php">Product Sub Category</a></li>
                   <li><a href="productColor.php">Product Colors</a></li>
@@ -99,9 +98,14 @@ if(!empty($size_name)){
                   <li><a href="productPacket.php">Product Packet</a></li>
                 </ul>
               </li>
-              
-
-            
+              <li><a href="user.php" data-bs-toggle="collapse show"aria-expanded="true"><i
+                    class="bi bi-graph-up"></i><span>Registration </span>
+                </a>
+              </li>
+              <li><a href="login.php" data-bs-toggle="collapse show"aria-expanded="true"><i
+                    class="bi bi-graph-up"></i><span>Log Out </span>
+                </a>
+              </li> 
             </ul>
           </nav>
         </div>
@@ -127,9 +131,7 @@ if(!empty($size_name)){
         <div class="row" >
           <div class="col-md-12  " >
             <div style="overflow-x:auto;" data-aos="fade-up" class="shadow bg-white  py-5 px-4">
-
-           
-
+          <!-- This is action method start -->
            <form action="" method="post" enctype="multipart/form-data">
               <h5> Update Products Size</h5>
               <table style="width:100%" class="current-data-table" > 
@@ -160,12 +162,9 @@ if(!empty($size_name)){
                     <!-- <input type="checkbox" name="status" value="status" > -->
                 </tr> 
               </table>
-              <!-- <div class="col-6 categorySubmit "> -->
               <button type="submit" name="submit" class="btn btn-primary">Submit</button>
-                
-              <!-- </div> -->
-
            </form>
+           <!-- This is action method start -->
             
           </div>
           </div>

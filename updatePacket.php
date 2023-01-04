@@ -98,6 +98,14 @@ if(!empty($packet_name)){
                   <li><a href="productPacket.php">Product Packet</a></li>
                 </ul>
               </li>
+              <li><a href="user.php" data-bs-toggle="collapse show"aria-expanded="true"><i
+                    class="bi bi-graph-up"></i><span>Registration </span>
+                </a>
+              </li>
+              <li><a href="login.php" data-bs-toggle="collapse show"aria-expanded="true"><i
+                    class="bi bi-graph-up"></i><span>Log Out </span>
+                </a>
+              </li> 
             </ul>
           </nav>
         </div>
