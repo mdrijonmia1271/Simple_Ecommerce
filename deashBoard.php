@@ -1,70 +1,17 @@
+
 <?php
 
-
+// $connect = new mysqli('localhost','root','','simple_ecommerce');
 $pdo = new PDO('mysql:host=localhost;port=3306;dbname=simple_ecommerce','root','');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$statement = $pdo->prepare('SELECT id, category_name FROM category');
+$statement = $pdo->prepare('SELECT * FROM deash_board ORDER BY id DESC');
 $statement->execute();
-$products = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
-// echo "<pre>";
-//  var_dump($products);
-// echo "</pre>";
-
-$emtCateName = '';
-$emtSubCateName = '';
-$emtColorName = '';
-$emtSizeName = '';
-$emtPacketName = '';
-$emtQuantity = '';
-if(isset($_POST['submit'])){
-  $category_name = $_POST['category_name'];
-  $sub_category_name = $_POST['sub_category_name'];
-  $color_name = $_POST['color_name'];
-  $size_name = $_POST['size_name'];
-  $packet_name = $_POST['packet_name'];
-  $quantity = $_POST['quantity'];
-  $description = $_POST['description'];
-  $status = isset($_POST['status']) && $_POST['status']  ? "1" : "0";
-  $date = date('Y-m-d H:i:s');
-
-  if(empty($category_name)){
-    $emtCateName = 'Fill Up this field';
-  }
-  // echo $category_name_id;
-  if(empty($sub_category_name)){
-    $emtSubCateName = 'Fill Up this field';
-  }
-  if(empty($color_name)){
-    $emtColorName = 'Fill Up this field';
-  }
-  if(empty($size_name)){
-    $emtSizeName = 'Fill Up this field';
-  }
-  if(empty($packet_name)){
-    $emtPacketName = 'Fill Up this field';
-  }
-  if(empty($quantity)){
-    $emtQuantity = 'Fill Up this field';
-  }
-
-  if(!empty($sub_category_name) && (!empty($category_name_id))){
-    $statement = $pdo ->prepare('INSERT INTO sub_category (sub_category_name, category_name_id, description, create_date, status )
-                 VALUE(:sub_category_name, :category_name_id, :description, :date, :status )');
-    $statement->bindVAlue(':sub_category_name', $sub_category_name);
-    $statement->bindVAlue(':category_name_id', $category_name_id);
-    $statement->bindVAlue(':description', $description);
-    $statement->bindVAlue(':date', $date);
-    $statement->bindVAlue(':status', $status);
-    $statement->execute();
-    header('location: ProductSubCategory.php');
-    
-
-  }
-
-}
+$products = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -89,14 +36,14 @@ if(isset($_POST['submit'])){
 <body>
   <!-- sidebar menu start -->
   <div class="page-container">
-    <div class="sidebar-menu">
+    <div class="sidebar-menu"> 
       <div class="sidebar-header">
         <div class="logo">
           <a href="index.html"> <img src="./img/290018488_1110770999821005_2691879510461168954_n.png" alt=""></a>
         </div>
       </div>
       <div class="header-text">
-        <a href="index.html"><i class="bi bi-house-door"></i>Dashboard</a>
+        <a href="deashBoard.php"><i class="bi bi-house-door"></i>Dashboard</a>
       </div>
       <div class="main-menu">
         <div class="menu-inner">
@@ -104,9 +51,10 @@ if(isset($_POST['submit'])){
             <ul class="metismenu" id="menu">
               <li class="management">Management</li>
               <li>
-                <a href="productCategory.php" data-bs-toggle="collapse show" data-bs-target="#productCategory" aria-controls="productCategory" aria-expanded="true"><i
-                    class="bi bi-graph-up"></i><span>Products Category </span>
+                <a href="productCategory.php"  
+                 ><i class="bi bi-graph-up"></i><span>Products Category </span>
                 </a>
+
                 <ul class="collapse show" id="services">
                   <li><a href="ProductSubCategory.php">Product Sub Category</a></li>
                   <li><a href="productColor.php">Product Colors</a></li>
@@ -121,7 +69,7 @@ if(isset($_POST['submit'])){
               <li><a href="login.php" data-bs-toggle="collapse show"aria-expanded="true"><i
                     class="bi bi-graph-up"></i><span>Log Out </span>
                 </a>
-              </li> 
+              </li>         
             </ul>
           </nav>
         </div>
@@ -138,180 +86,127 @@ if(isset($_POST['submit'])){
               <span><i class="bi bi-list"></i></span>
             </div>
           </div>
+         
         </div>
       </div>
       <!-- header area end -->
 
       <!-- main content area start -->
       <div class="main-content-inner pt-4">
-        <div class="row" >
-          <div class="col-md-12  " >
-            <div style="overflow-x:auto;" data-aos="fade-up" class="shadow bg-white  py-5 px-4">
-
-           <form action="" method="POST" enctype="multipart/form-data">
-            <h5>Add Deash Board Products</h5>
-              <table style="width:100%" class="current-data-table" > 
-                <!-- Category Section Start -->
-                <tr>
-                  <th>Category Name:</th>
-                  <td>
-                    <select name="category_name">
-                      <option value=""  selected="selected"> -- Select Size -- </option>
-                      <?php
-                      // Iterating through the product array
-                      foreach($products as $key => $item){
-                          echo "<option value='$key'>$item</option>";
-                      }
-                      ?>
-                  </select>
-                  <br>
-                  <?php if(isset($_POST['submit'])){echo "<span class='text-danger'>".$emtCateName."</span>";} ?>
-                  </td>
-                </tr>
-                <!-- Category Section End -->
-
-                <!-- Sub Category Section Start -->
-                  <tr>
-                  <th>Sub Category Name:</th>
-                  <td>
-                    <select name="sub_category_name">
-                        <?php
-                            $statement = $pdo->prepare('SELECT id, sub_category_name FROM sub_category');
-                            $statement->execute();
-                            $products = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
-                        ?>
-                      <option value=""  selected="selected"> -- Select Sub Categoty -- </option>
-                      <?php
-                      // Iterating through the product array
-                      foreach($products as $key => $item){
-                          echo "<option value='$key'>$item</option>";
-                      }
-                      ?>
-                  </select>
-                  <br>
-                  <?php if(isset($_POST['submit'])){echo "<span class='text-danger'>".$emtSubCateName."</span>";} ?>
-                  </td>
-                </tr>
-                <!-- Sub Category Section End -->
-                
-                <!-- Color Section Start -->
-                <tr>
-                  <th>Color Name:</th>
-                  <td>
-                    <select name="color_name">
-                        <?php
-                            $statement = $pdo->prepare('SELECT id, color_name FROM colors');
-                            $statement->execute();
-                            $products = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
-                        ?>
-                      <option value=""  selected="selected"> -- Select Color -- </option>
-                      <?php
-                      // Iterating through the product array
-                      foreach($products as $key => $item){
-                          echo "<option value='$key'>$item</option>";
-                      }
-                      ?>
-                  </select>
-                  <br>
-                  <?php if(isset($_POST['submit'])){echo "<span class='text-danger'>".$emtColorName."</span>";} ?>
-                  </td>
-                </tr>
-                <!-- Color Section End -->
-
-                <!-- Size Section Start -->
-                 <tr>
-                  <th>Size Name:</th>
-                  <td>
-                    <select name="size_name">
-                        <?php
-                            $statement = $pdo->prepare('SELECT id, size_name FROM sizes');
-                            $statement->execute();
-                            $products = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
-                        ?>
-                      <option value=""  selected="selected"> -- Select Size -- </option>
-                      <?php
-                      // Iterating through the product array
-                      foreach($products as $key => $item){
-                          echo "<option value='$key'>$item</option>";
-                      }
-                      ?>
-                  </select>
-                  <br>
-                  <?php if(isset($_POST['submit'])){echo "<span class='text-danger'>".$emtSizeName."</span>";} ?>
-                  </td>
-                </tr>
-                <!-- Size Section End -->
-                    
-                <!-- Packet Section Start -->
-                <tr>
-                  <th>Packet Name:</th>
-                  <td>
-                    <select name="packet_name">
-                        <?php
-                            $statement = $pdo->prepare('SELECT id, packet_name FROM packets');
-                            $statement->execute();
-                            $products = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
-                        ?>
-                      <option value=""  selected="selected"> -- Select Packet -- </option>
-                      <?php
-                      // Iterating through the product array
-                      foreach($products as $key => $item){
-                          echo "<option value='$key'>$item</option>";
-                      }
-                      ?>
-                  </select>
-                  <br>
-                  <?php if(isset($_POST['submit'])){echo "<span class='text-danger'>".$emtPacketName."</span>";} ?>
-                  </td>
-                </tr>
-                <!-- Packet Section End -->
-
-                <!-- Quantity Section Start -->
-                <tr>
-                  <th>Quantity:</th>
-                  <td>
-                    <input type="text" name="quantity" placeholder="Enter Quantity">
-                    <br>
-                    <?php if(isset($_POST['submit'])){echo "<span class='text-danger'>".$emtQuantity."</span>";} ?>
-                  </td>
-                </tr>
-                <!-- Quantity Section End -->
-
-                <tr>
-                  <th>Sub Category Description:</th>
-                  <td>
-                    <textarea cols="50" name="description" placeholder="Description"></textarea>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Status:</th>
-                  <td><label class="switch">
-                      <input type="checkbox" name="status">
-                      <span class="slider round"></span>
-                    </label>
-                    <br>
-                    <?php if(isset($_POST['submit'])){echo "<span class='text-danger'>".$emtQuantity."</span>";} ?>
-                </td>
-                </tr>
-              </table>
-              <!-- <div class="col-6 categorySubmit"> -->
-              <button type="submit" name="submit" class="btn btn-primary">Submit</button>
-              <!-- </div> -->
-           </form>
+        <div class="row pb-3 pt-3">
+          <div class="col-md-3 col-sm-3">
+            <h4 style="margin-bottom: 0;">DeshBoard</h4>
           </div>
-          </div>
+          <div class="col-md-10 col-sm-10"> </div>
         </div>
 
+        <div class="row" data-aos="fade-up">
+          <div class="col-md-12">
+            <div class="recentUser">
+              <div class="card shadow">
+                <div class="card-body">
+                  <div class="row pt-4 pb-4 px-2">
+                    <div class="col-md-12">
+                      <div class="product-add-btn">
+                        <a  href="addDeashBoard.php" class="add-user">Add Product</a>
+                       </div>
+                      <!-- This is table data show start -->
+                       <table class="table"">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Category Name</th>
+                            <th scope="col">Sub Category Name</th>
+                            <th scope="col">Color Name</th>
+                            <th scope="col">Size Name</th>
+                            <th scope="col">Packet Name</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Create Date</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody> 
+                        <?php
+                        foreach ($products as $i => $product): ?>
+                            <tr>
+                                <th scope="row"><?php echo $i+1 ?></th>
+                              
+                                <td><?php
+                                  $product_cate_name_id = $product ['category_name_id'];
+                                  $con = mysqli_connect('localhost','root','','simple_ecommerce');
+                                  if ($result = mysqli_query($con, "SELECT * FROM category WHERE id = '$product_cate_name_id'")) {
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                      echo $row['category_name'];
+                                    }
+                                  }
+                                 ?></td>
+                                 <td><?php
+                                  $product_sub_cate_name_id = $product ['sub_category_name_id'];
+                                  $con = mysqli_connect('localhost','root','','simple_ecommerce');
+                                  if ($result = mysqli_query($con, "SELECT * FROM sub_category WHERE id = '$product_sub_cate_name_id'")) {
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                      echo $row['sub_category_name'];
+                                    }
+                                  }
+                                 ?></td>
+                                 <td><?php
+                                  $product_color_name_id = $product ['color_name_id'];
+                                  $con = mysqli_connect('localhost','root','','simple_ecommerce');
+                                  if ($result = mysqli_query($con, "SELECT * FROM colors WHERE id = '$product_color_name_id'")) {
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                      echo $row['color_name'];
+                                    }
+                                  }
+                                 ?></td>
+                                  <td><?php
+                                  $product_size_name_id = $product ['size_name_id'];
+                                  $con = mysqli_connect('localhost','root','','simple_ecommerce');
+                                  if ($result = mysqli_query($con, "SELECT * FROM sizes WHERE id = '$product_size_name_id'")) {
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                      echo $row['size_name'];
+                                    }
+                                  }
+                                 ?></td>
+                                 <td><?php
+                                  $product_pkt_name_id = $product ['packet_name_id'];
+                                  $con = mysqli_connect('localhost','root','','simple_ecommerce');
+                                  if ($result = mysqli_query($con, "SELECT * FROM packets WHERE id = '$product_pkt_name_id'")) {
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                      echo $row['packet_name'];
+                                    }
+                                  }
+                                 ?></td>
+                                 <td><?php echo $product ['quantity'] ?></td>
+                                <td><?php echo $product ['create_date'] ?></td>
+                                <td>
+                                    <a href="updateDeashBoard.php?id=<?php echo $product['id'] ?>" type="button" class="btn btn-sm btn-outline-primary">Edit</a>
+                                   <form style="display: inline-block" method="post" action="deleteDeshBoard.php" >
+                                       <input type="hidden" name="id" value="<?php echo $product['id'] ?>">
+                                       <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                   </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <!-- This is table data show start -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  </div>
-  </div>
+
+
 
   <script src="./js/jquery-2.2.4.min.js"></script>
   <script src="./js/bootstrap.min.js"></script>
   <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
   <script src="./js/app.js"></script>
-
 </body>
+
 </html>

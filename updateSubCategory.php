@@ -42,7 +42,6 @@ if(isset($_POST['submit'])){
   if(empty($category_name_id)){
     $empt_category_name = 'Fill Up this field';
   }
-
   if(!empty($sub_category_name) && (!empty($category_name_id))){
     $statement = $pdo ->prepare('UPDATE sub_category SET sub_category_name = :sub_category_name, category_name_id = :category_name_id, description = :description, status = :status WHERE id = :id');
     $statement->bindVAlue(':sub_category_name', $sub_category_name);
@@ -93,7 +92,7 @@ if(isset($_POST['submit'])){
         </div>
       </div>
       <div class="header-text">
-        <a href="index.html"><i class="bi bi-house-door"></i>Dashboard</a>
+        <a href="deashBoard.php"><i class="bi bi-house-door"></i>Dashboard</a>
       </div>
       <div class="main-menu">
         <div class="menu-inner">
